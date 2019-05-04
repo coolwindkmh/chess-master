@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>체스메인</title>
+<style>
+#wrapper{
+	width:800px;
+	height:800px;
+	background:yellow;
+	position:relative;
+	margin:auto;
+	border:2px solid yellow;
+	z-index:3;
+	
+}
+
+
+
+</style>
+<script src="./Knight.js"></script><script src="./King.js"></script><script src="./Queen.js"></script><script src="./Rok.js"></script><script src="./Pawn.js"></script><script src="./Bishop.js"></script>
+<script src="./Stage.js"></script><script src="./Span.js"></script>
+<script>
+var wrapper;
+var spanArray=[];
+var stageArray=[];
+function init(){
+	wrapper=document.getElementById("wrapper");
+	
+	
+	createStage();
+	setBlack();
+
+
+}
+function setBlack(){//체스판에 블랙말 세팅하는 함수
+	//var king= new King(wrapper, 400, 0);
+
+	//var queen= new Queen(wrapper, 300, 0);
+
+	var rok= new Rok("BLACK", "ROK", stageArray, 0);
+	var rok= new Rok("BLACK", "ROK", stageArray, 7);
+	var rok= new Rok("BLACK", "ROK", stageArray, 3);
+
+
+	//var knight= new Knight(wrapper, 100, 0);
+	//var knight= new Knight(wrapper, 600, 0);
+
+	//var bishop= new Bishop(wrapper, 200, 0);
+	//var bishop= new Bishop(wrapper, 500, 0);
+	
+	for(var i=0;i<8;i++){
+		var pawn= new Pawn("PAWN", stageArray, i+8);
+	}
+	
+	//배열넣
+}
+function createStage(){ // 체스판 만드는 함수
+	for(var j=0;j<8;j++){
+		for(var i=0;i<8;i++){
+			var stage = new Stage(wrapper, j+1, i+1);
+			stageArray.push(stage);
+		}
+	}
+}
+function createSpan(name, stageObj, img){ // 말 클릭시 이동가능한 장소 span으로 만드는 함수
+	var span = new Span(name, stageObj, img);
+	
+	
+}
+function removeSpan(){ // 말을 다시 클릭시 이동경로 없어지는 함수  or 말을 이동시 경로 없어지는 함수.
+	for(var i=0;i<spanArray.length;i++){
+		//wrapper.removeChild(spanArray[i]);
+		//alert(move);
+		var div=spanArray[i].div;
+		div.removeChild(div.childNodes[0]);				
+	}
+	spanArray=[];
+}
+addEventListener("load", function(){
+	init();
+});
+</script>
+</head>
+<body>
+	<div id="wrapper">
+	
+	</div>
+	<div></div>
+</body>
+</html>

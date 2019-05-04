@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>체스메인</title>
+<style>
+body{
+	background:#3d3d3d;
+}
+.wrapper{
+	width:1000px;
+	height:800px;
+	margin:auto;
+	top:100px;
+}
+#board{
+	width:800px;
+	height:800px;
+	position:absolute;
+	margin:auto;
+	border:2px solid yellow;
+	float:left;
+	z-index:3;
+}
+#option{
+	width:10%;
+	height:800px;
+	
+	float:left;
+	border:2px solid yellow;
+	left:1263px;
+	position:absolute;
+	z-index:3;
+}
+#setGame{
+	width:100%;
+	height:10%;
+}
+#setGame div{
+	width:50%;
+	height:100%;
+	float:left;
+}
+#clock{
+	width:100%;
+	height:10%;
+	border-top:2px solid yellow;
+	padding: 30px 0px;
+	background-size:100px;
+}
+#timer{
+	width:100%;
+	height:20%;
+	font-size:70px;
+	text-align:center;
+	margin: 0px 0px;
+	font-weight:bold;
+	color:#e8e8e8;
+}
+#turn{
+	width:100%;
+	height:30%;
+	border:0px solid yellow;
+    border-top:2px solid yellow;
+	border-bottom:2px solid yellow;
+	text-align:center;
+	font-size:50px;
+	font-weight:bold;
+	color:#e8e8e8;
+}
+#bt_undo{
+	width:50%;
+	height:100%;
+}
+#bt_option{
+	width:50%;
+	height:100%;
+}
+#setting{
+	width:300px;
+	height:350px;
+	float:left;
+	left:715px;
+	top:150px;
+	background:url("./img/option.jpg");
+	background-size:contain;	
+	border-radius:20px;
+	/*
+		background-size:"npx npx";
+		background-size:cover;//꽉차게->>이미지 natural size에 따라 repeat이 보일 수 있어--> 추가로 background-repeat:no-repeat;b
+		background-size:contain;//내가 지정한 너비높이 안에서 이미지 다보이게(300*400)에 이미지 다 쌔려넣기--> repeat이 상관없어
+
+	*/
+	/*
+	background-repeat:no-repeat;	
+	*/
+	color:#fff;
+	position:absolute;
+	z-index:1;
+	opacity:0.0;
+}
+#setting div{
+	width:100%;
+	height:33.3333%;
+	text-align:center;
+}
+#up{
+	font-size:30px;
+	line-height: 100px;
+    display: block;
+    text-align: center;
+}
+#middle{
+	font-size:30px;
+	line-height: 100px;
+    display: block;
+    text-align: center;
+}
+/*
+#winBox{
+	width:1000px;
+	height:300px;
+	float:left;
+	position:relative;
+	top:250px;
+}
+*/
+#reSetting{
+	top:200px;
+	font-size:30px;
+	line-height: 100px;
+    display: block;
+    text-align: center;
+}
+
+
+</style>
+<script src="./Knight.js"></script><script src="./King.js"></script><script src="./Queen.js"></script><script src="./Rok.js"></script><script src="./Pawn.js"></script><script src="./Bishop.js"></script>
+<script src="./Stage.js"></script><script src="./Span.js"></script><script src="./common.js"></script>
+<script>
+var board, clock, turn, bt_undo, bt_option, setting, thema_name, timer, time_name, winBox, bt_start;
+var spanArray=[];
+var stageArray=[];
+var pawnArrayB=[]; //블랙폰 객체 배열
+var pawnArrayW=[]; //화이트폰 객체 배열
+var spanArray2=[]; // 생겨난 모든 span 배열
+var allBlack=[]; //블랙팀 모든 객체
+var allWhite=[];// 화이트팀 모든 객체
+var undoPic=[[0,0]]; //undo img 배열
+var undoStage=[];//undo div 저장
+var opCount=0; // 옵션 클릭을 제어하기 위한 변수
+var thema=[["#9a9a9a","#565256"],["#c283a3","#eb2c61"],["#86b1f2","#3a187a"],["#1fc593","#a6f755"],["#ff80c0","#ff80ff"]]; //테마배열
+var themaCnt=0; // 테마 변경을 위한 변수
+var timeSetting=[0,10,20,30,40,50,60];
+var timeCnt=0;
+var min=0;
+var sec=0;
+var team="BLACK";
+var lastCount=0; // 폰이 마지막으로 갔을때 말이 생기고 그거 undo를 위한 변수
+var paBox=[]; // 폰이 마지막으로 갔을때 말이 생기고 그거 undo를 위한 배열
+var imgBox=[]; //// 폰이 마지막으로 갔을때 말이 생기고 그거 undo를 위한 배열
+var st;
+var vic; // 빅토리 이미지
+var startSt=[];
+var arriveSt=[];
+var moveImg=[];
+
+function init(){
+	bt_start=document.getElementById("bt_start");
+	winBox=document.getElementById("winBox");
+	time_name=document.getElementById("time_name");
+	timer=document.getElementById("timer");
+	thema_name=document.getElementById("thema_name");
+	setting=document.getElementById("setting");
+	bt_option=document.getElementById("bt_option");
+	bt_undo=document.getElementById("bt_undo");
+	turn=document.getElementById("turn");
+	clock=document.getElementById("clock");
+	board=document.getElementById("board");
+	screenTurn(team);
+	clockImg();
+	createStage();
+	setBlack();
+	setWhite();
+	undoImg();
+	creatgear();
+	//winnerDiv();
+	startSet();
+	timer.innerText=getTimeString(min)+":"+getTimeString(sec);
+}
+function setBlack(){//체스판에 블랙말 세팅하는 함수	
+	var king= new King("BLACK", "KING", stageArray, 3, true, "./img/king_b.png");
+	var queen= new Queen("BLACK", "QUEEN", stageArray, 4, true, "./img/queen_b.png");
+	var rok= new Rok("BLACK", "ROK", stageArray, 0, true, "./img/rok_b.png");
+	var rok2= new Rok("BLACK", "ROK", stageArray, 7, true, "./img/rok_b.png");
+	var knight= new Knight("BLACK", "KNIGHT", stageArray, 1, true, "./img/knight_b.png");
+	var knight2= new Knight("BLACK", "KNIGHT", stageArray, 6, true, "./img/knight_b.png");
+	var bishop= new Bishop("BLACK", "BISHOP", stageArray, 2, true, "./img/bishop_b.png");
+	var bishop2= new Bishop("BLACK", "BISHOP", stageArray, 5, true, "./img/bishop_b.png");
+	allBlack.push(king, queen, rok, rok2, knight, knight2, bishop ,bishop2);
+	for(var i=0;i<8;i++){
+		var pawn= new Pawn("BLACK", "PAWN", stageArray, i+8, true, "./img/pawn_b.png");
+		pawnArrayB.push(pawn);
+		allBlack.push(pawn);		
+	}		
+}
+function setWhite(){
+	var king= new King("WHITE", "KING", stageArray, 59, false, "./img/king_w.png");
+	var queen= new Queen("WHITE", "QUEEN", stageArray, 60, false, "./img/queen_w.png");
+	var rok= new Rok("WHITE", "ROK", stageArray, 56, false, "./img/rok_w.png");
+	var rok2= new Rok("WHITE", "ROK", stageArray, 63, false, "./img/rok_w.png");
+	var knight= new Knight("WHITE", "KNIGHT", stageArray, 57, false, "./img/knight_w.png");
+	var knight2= new Knight("WHITE", "KNIGHT", stageArray, 62, false, "./img/knight_w.png");
+	var bishop= new Bishop("WHITE", "BISHOP", stageArray, 58, false,"./img/bishop_w.png");
+	var bishop2= new Bishop("WHITE", "BISHOP", stageArray, 61, false, "./img/bishop_w.png");
+	allWhite.push(king, queen, rok, rok2, knight, knight2, bishop ,bishop2);	
+	for(var i=0;i<8;i++){
+		var pawn= new Pawn("WHITE", "PAWN", stageArray, i+48, false, "./img/pawn_w.png");
+		pawnArrayW.push(pawn);
+		allWhite.push(pawn);
+	}	
+}
+function lastPawn(id, parent, img, span){ //폰이 마지막 까지 도달하면 바꾸는 함수 ****
+	var Id=parseInt(id);
+	var Parent=parent;
+	var Img=img;
+	var Span=span;
+	if(Id>80){
+		console.log(parent)
+		console.log(Img)
+		parent.removeChild(Img);
+		var a=prompt("1.rok, 2.knight, 3.bishop 4.queen");
+		if(a==1){
+			var rok=new Rok("BLACK", "ROK", Parent, Id, true, "./img/rok_b.png");
+			allBlack.push(rok);
+			imgBox.push(rok);
+		}else if(a==2){
+			var knight= new Knight("BLACK", "KNIGHT", Parent, Id, true, "./img/knight_b.png");
+			allBlack.push(knight);
+			imgBox.push(knight);
+		}else if(a==3){
+			var bishop= new Bishop("BLACK", "BISHOP", Parent, Id, true, "./img/bishop_b.png");
+			allBlack.push(bishop);
+			imgBox.push(bishop);
+		}else if(a==4){
+			var queen= new Queen("BLACK", "QUEEN", Parent, Id, true, "./img/queen_b.png");
+			allBlack.push(queen);
+			imgBox.push(queen);
+		}
+		lastCount++;
+		paBox.push(Parent);		
+	}
+	else if(Id<20){
+		parent.removeChild(Img);
+		var a=prompt("1.rok, 2.knight, 3.bishop 4.queen");
+		if(a==1){
+			var rok=new Rok("WHITE", "ROK", Parent, Id, true, "./img/rok_w.png");
+			allWhite.push(rok);
+			imgBox.push(rok);
+		}else if(a==2){
+			var knight= new Knight("WHITE", "KNIGHT", Parent, Id, true, "./img/knight_w.png");
+			allWhite.push(knight);
+			imgBox.push(knight);
+		}else if(a==3){
+			var bishop= new Bishop("WHITE", "BISHOP", Parent, Id, true, "./img/bishop_w.png");
+			allWhite.push(bishop);
+			imgBox.push(bishop);
+		}else if(a==4){
+			var queen= new Queen("WHITE", "QUEEN", Parent, Id, true, "./img/queen_w.png");
+			allWhite.push(queen);
+			imgBox.push(queen);
+		}	
+		lastCount++;
+		paBox.push(Parent);
+	}
+}
+function createStage(){ // 체스판 만드는 함수
+	for(var j=0;j<8;j++){
+		for(var i=0;i<8;i++){
+			var stage = new Stage(board, j+1, i+1, thema[themaCnt][0], thema[themaCnt][1]);
+			stageArray.push(stage);
+		}
+	}
+}
+function watch(){
+	sec--;
+	if(sec<0){
+		min--;
+		sec=59;
+	}
+	if(min<0){ // 한 게임끝
+		if(team=="BLACK"){
+		changeTurn("");
+		screenTurn("WHITE");
+		}else if(team=="WHITE"){
+			changeTurn("");
+			screenTurn("BLACK");
+		}
+		min=timeCnt;
+		sec=0;
+		/*
+		시간 끝나면 적으로 턴 체인지
+		*/
+	}
+	timer.innerText=getTimeString(min)+":"+getTimeString(sec);
+}
+function playGame(){
+	if(min>0){
+		st=setInterval("watch()",18)
+	}	
+}
+function next_time(){
+	if(timeCnt<60){
+		timeCnt+=10;
+		if(timeCnt==0){
+			time_name.innerText="0";
+			min=0;
+		}else if(timeCnt==10){
+			time_name.innerText="10";
+			min=10;
+		}else if(timeCnt==20){
+			time_name.innerText="20";
+			min=20;
+		}else if(timeCnt==30){
+			time_name.innerText="30";
+			min=30;
+		}else if(timeCnt==40){
+			time_name.innerText="40";
+			min=40;
+		}else if(timeCnt==50){
+			time_name.innerText="50";
+			min=50;
+		}else if(timeCnt==60){
+			time_name.innerText="60";
+			min=60;
+		}
+	}
+	timer.innerText=getTimeString(min)+":"+getTimeString(sec);
+}
+function prev_time(){
+	if(timeCnt>=0){
+		timeCnt-=10;
+		if(timeCnt==0){
+			time_name.innerText="0";
+			min=0;
+		}else if(timeCnt==10){
+			time_name.innerText="10";
+			min=10;
+		}else if(timeCnt==20){
+			time_name.innerText="20";
+			min=20;
+		}else if(timeCnt==30){
+			time_name.innerText="30";
+			min=30;
+		}else if(timeCnt==40){
+			time_name.innerText="40";
+			min=40;
+		}else if(timeCnt==50){
+			time_name.innerText="50";
+			min=50;
+		}else if(timeCnt==60){
+			time_name.innerText="60";
+			min=60;
+		}
+	}
+	timer.innerText=getTimeString(min)+":"+getTimeString(sec);
+}
+function next_thema(){
+	if(themaCnt<4){
+		themaCnt++;
+		if(themaCnt==0){
+			thema_name.innerText="Classic";
+		}else if(themaCnt==1){
+			thema_name.innerText="Blood";
+		}else if(themaCnt==2){
+			thema_name.innerText="Ocean";
+		}else if(themaCnt==3){
+			thema_name.innerText="Forest";
+		}else if(themaCnt==4){
+			thema_name.innerText="Funky";
+		}	
+		while ( board.hasChildNodes() ) { 
+			board.removeChild( board.firstChild ); 		
+		}
+		//모든 배열 초기화
+		stageArray=[];
+		allBlack=[];
+		allWhite=[];
+		pawnArrayB=[]; //블랙폰 객체 배열
+		pawnArrayW=[]; //화이트폰 객체 배열
+		createStage();
+		setBlack();
+		setWhite();		
+	}
+}
+function prev_thema(){
+	if(themaCnt>0){
+		themaCnt--
+		if(themaCnt==0){
+			thema_name.innerText="Classic";
+		}else if(themaCnt==1){
+			thema_name.innerText="Blood";
+		}else if(themaCnt==2){
+			thema_name.innerText="Ocean";
+		}else if(themaCnt==3){
+			thema_name.innerText="Forest";
+		}else if(themaCnt==4){
+			thema_name.innerText="Funky";
+		}		
+		while ( board.hasChildNodes() ) { 
+			board.removeChild( board.firstChild ); 		
+		}
+		//모든 배열 초기화
+		stageArray=[];
+		allBlack=[];
+		allWhite=[];
+		pawnArrayB=[]; //블랙폰 객체 배열
+		pawnArrayW=[]; //화이트폰 객체 배열
+		createStage();
+		setBlack();
+		setWhite();
+	}
+}
+function createSpan(name, stageObj, img, parenId, index){ // 말 클릭시 이동가능한 장소 span으로 만드는 함수
+	var span = new Span(name, stageObj, img, parenId, pawnArrayB, pawnArrayW, index);	
+}
+function removeSpan(){ // 같은 말을 다시 클릭시 이동경로 없어지는 함수  or 말을 이동시 경로 없어지는 함수.
+	if(spanArray2.length>0){
+		for(var i=0;i<spanArray2.length;i++){
+			var parent=spanArray2[i].parentNode;
+			parent.removeChild(spanArray2[i]);
+		}
+		spanArray2=[];
+	}
+}
+function removeObj(stageObj){ // 적위에 span 클릭시 다른팀 말 죽이는 함수
+	var img=stageObj.firstChild;
+	if(img.id=="WHITE"){ ///적군 없을때 팀조건 맞는지 확인
+		if(img.name=="KING"){
+			alert("black win");
+			winnerDiv();
+			clearInterval(st);
+			turn.innerText="Winner is Black!!";
+		}
+		stageObj.removeChild(img);
+		undoPic.push([img, true]); // 여기서 true는 적군을 죽인것을 확인하기 위해사용  이 img undo 하면 적군도 다시 부활
+		undoStage.push(stageObj);
+	}
+	if(img.id=="BLACK"){
+		if(img.name=="KING"){
+			alert("white win");
+			winnerDiv();
+			clearInterval(st);
+			turn.innerText="Winner is White!!";
+		}
+		stageObj.removeChild(img);
+		undoPic.push([img, true]);
+		undoStage.push(stageObj);
+	}
+	removeSpan();
+}
+
+function winnerDiv(){//이겼을때 화면창 띄어주는 함수
+	var vic=document.createElement("img");
+	vic.src="./img/victory.png";
+	vic.style.width=700+"px";
+	vic.style.height=250+"px";
+	vic.style.position="absolute";
+	vic.style.top=290+"px";
+	vic.style.left=530+"px";
+	//img.style.left=50+"%";
+	//img.style.top=50+"%";
+	//img.style.marginLeft=-300+"px";
+	//img.style.marginTop=-200+"px";
+	vic.style.opacity=1;
+	vic.style.zIndex=5;
+	speedVic=vic.style.left;
+	winBox.appendChild(vic);
+	
+}
+ 
+function undoExecute(){ //undo 실행
+	removeSpan();
+	min=timeCnt;
+	if(lastCount>0){ //마지막 칸까지 폰이 이동했을때 undo하면 버그 잡아주는것
+		var a=paBox[(paBox.length-1)];
+		var b=imgBox[(imgBox.length-1)];
+		a.removeChild(b.img);
+		paBox.pop();
+		imgBox.pop();
+		lastCount--;
+	}/*
+	else if(lastWhite>0){
+		var a=paBox2[(paBox.length-1)];
+		var b=imgBox2[(imgBox.length-1)];
+		a.removeChild(b.img);
+		allWhite.pop();
+		lastWhite--;
+	}
+	*/
+	var set = undoPic[(undoPic.length-1)][1]
+	if(set==0){ //그냥 움직였을때 undo
+		var img = undoPic[(undoPic.length-1)][0]
+		var stage = undoStage[(undoStage.length-1)]
+		undoPic.pop();
+		undoStage.pop();
+		stage.appendChild(img);
+		if(img.id=="BLACK"){ //턴 다시 되돌리기
+		changeTurn("");
+		screenTurn("BLACK");
+			if((stage.id)<30){
+				img.name=0;
+			}
+		}else if(img.id=="WHITE"){
+			if((stage.id)>68){
+				img.name=0;
+			}
+			changeTurn("");
+			screenTurn("WHITE");
+		}
+	}else if(set==true){ // 적군을 죽인뒤 undo
+		
+		for(var i=0;i<2;i++){
+			var img = undoPic[(undoPic.length-1)][0]
+			var stage = undoStage[(undoStage.length-1)]
+			undoPic.pop();
+			undoStage.pop();
+			stage.appendChild(img);
+		}
+		if(img.id=="BLACK"){ //턴 다시 되돌리기
+			changeTurn("");
+			screenTurn("BLACK");
+		}else if(img.id=="WHITE"){
+			changeTurn("");
+			screenTurn("WHITE");
+		}
+	}
+}
+function pawnFirstMove(pawnObj){ // 폰이 처음 움직이고 다음 움직임을 위한 함수
+	pawnObj.name=1;
+}
+function clockImg(){
+	var img = document.createElement("img");
+	img.src="./img/clock.png";
+	img.style.width=70+"px";
+	img.style.height=70+"px";
+	img.style.display="block";
+	img.style.margin="auto";
+	clock.appendChild(img);
+}
+function screenTurn(teamId){
+	var a= "Whose turn"
+	team= teamId;
+	turn.innerText=a +"     "+ team;
+
+}
+function undoImg(){ //undo 이미지
+	var img=document.createElement("img");
+	img.src="./img/undo.png"
+	img.style.width=50+"px";
+	img.style.height=50+"px";
+	img.style.position="absolute";
+	img.style.left=25+"px";
+	img.style.top=15+"px";
+	
+	bt_undo.appendChild(img);
+	img.addEventListener("click",function(){
+		undoExecute(); //undo 실행
+	});
+}
+function changeTurn(img){
+	for(var i=0;i<allBlack.length;i++){ // 블랙 화이트 한번씩 턴을 바꾸기위해 flag 교환	
+		var flag=allBlack[i].flag;
+		flag=!flag;
+		allBlack[i].flag=flag;
+		if(img.id=="BLACK"){
+			screenTurn("WHITE");
+		}else if(img.id=="WHITE"){
+			screenTurn("BLACK");
+		}
+	}
+	for(var i=0;i<allWhite.length;i++){ // 블랙 화이트 한번씩 턴을 바꾸기위해 flag 교환		
+		var flag2=allWhite[i].flag;
+		flag2=!flag2;
+		allWhite[i].flag=flag2;
+		if(img.id=="BLACK"){
+			screenTurn("WHITE");
+		}else if(img.id=="WHITE"){
+			screenTurn("BLACK");
+		}
+	}
+}
+function creatgear(){ //완성
+	var img=document.createElement("img");
+	img.src="./img/gear.png"
+	img.style.width=50+"px";
+	img.style.height=50+"px";
+	img.style.position="absolute";
+	img.style.margin="auto";
+	img.style.left=120+"px";
+	img.style.top=15+"px";
+
+	bt_option.appendChild(img);
+	img.addEventListener("click",function(){
+		if(opCount%2==0){
+			setting.style.opacity=0.8;
+			setting.style.zIndex=4;
+		}else if(opCount%2==1){
+			setting.style.opacity=0.0;
+			setting.style.zIndex=1;
+		}
+		opCount++;
+	});	
+}
+function startSet(){ //완성
+	var img=document.createElement("img");
+	img.src="./img/start6.png"
+	img.style.width=100+"px";
+	img.style.height=100+"px";
+	img.style.position="absolute";
+	img.style.margin="auto";
+	img.style.left=46+"px";
+	img.style.top=660+"px";
+
+	bt_start.appendChild(img);
+	
+	img.addEventListener("click",function(){
+		playGame();
+	});
+}
+function confirm1(){
+	var a=confirm("재시작 하겠습니까?");
+	if(a){
+		location.reload();
+	}
+}
+/*
+function moveEffect(){
+		
+		var startid = startSt[0].id;
+		var arriveid = arriveSt[0].id;
+		var img=moveImg[0];
+		var moveA=[];
+		var SSDIV=[];
+		var yy=parseInt(startid.substring(1));	///아이디값을 하나하나 잘라서 숫자로 얻어옴   ex  id:18 >>> 1 리턴  현재이미지의 x좌표
+		var xx=parseInt(startid.substring(0,1));
+		var yyy=parseInt(arriveid.substring(1));	///아이디값을 하나하나 잘라서 숫자로 얻어옴   ex  id:18 >>> 1 리턴  현재이미지의 x좌표
+		var xxx=parseInt(arriveid.substring(0,1));
+		console.log(startid);
+		console.log(arriveid);
+		console.log(xx);
+		console.log(xxx);
+		if(xx==xxx){
+			if(yy<yyy){
+				for(var i=yy;i<(yyy+1);i++){
+					moveA.push(i);
+				}
+			}
+			for(var a=0;a<stageArray.length;a++){
+				for(var i=0;moveA.length;i++){
+					if(stageArray[a].div.id==xx+""+moveA[i]){
+						SSDIV.push(stageArray[a].div);
+						alert();
+					}
+				}
+			}
+			for(var i=0;i<SSDIV.length;i++){
+				alert();
+				SSDIV[i].appendChild(img);
+			}
+			console.log(img);
+			console.log(moveA);
+			console.log(SSDIV);
+		}
+		
+}
+*/
+addEventListener("load", function(){
+	init();
+});
+</script>
+</head>
+<body>	
+	<div id="winBox"></div>
+	<div class="wrapper">
+		<div id="setting">
+		<div id="up">
+			<div style="width:100%; height:40%;">
+			<span onClick="prev_thema()">◀</span>
+			theme
+			<span onClick="next_thema()">▶</span>
+			</div>
+			<div style="display:table-cell; vertical-align:middle; margin:auto; height:80px; width:300px;" id="thema_name">Classic</div>
+		</div>
+		<div id="middle">
+			<div style="width:100%; height:40%;">
+			<span onClick="prev_time()">◀</span>
+			timer
+			<span onClick="next_time()">▶</span>
+			</div>
+			<div style="display:table-cell; vertical-align:middle; margin:auto; height:50px; width:300px;" id="time_name">0</div>
+		</div>
+		<div id="reSetting" onClick="confirm1()">restart</div>
+		</div>
+		<div id="board">
+		</div>
+		<div id="option">
+			<div id="setGame">
+				<div id="bt_undo"></div>
+				<div id="bt_option"></div>
+			</div>
+			<div id="clock"></div>
+			<div id="timer"></div>
+			<div id="turn"></div>
+			<div id="bt_start"></div>
+			
+		</div>
+	</div>
+</body>
+</html>

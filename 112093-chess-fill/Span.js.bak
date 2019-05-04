@@ -1,0 +1,134 @@
+class Span{
+	constructor(name, stageObj, img){
+		//this.container=container;
+		this.img=img;
+		this.move=[];///// span값을 입력할 div객체 저장
+		this.move2=[];
+		this.stageObj=stageObj;
+		this.x=parseInt(this.stageObj.div.id.substring(1));	///아이디값을 하나하나 잘라서 숫자로 얻어옴   ex  id:18 >>> 1 리턴
+		this.y=parseInt(this.stageObj.div.id.substring(0,1));  ///아이디값을 하나하나 잘라서 숫자로 얻어옴   ex  id:18 >>> 8 리턴
+		if(name=="ROK"){
+			//for(var i=0;i<7;i++){
+				for(var i=this.x+1;i<9;i++){
+					this.makeSpan();					
+					for(var a=0;a<stageArray.length;a++){
+						if(stageArray[a].div.id==this.y+""+i){
+							if(stageArray[a].div.hasChildNodes()){ // div 자식이 어떤 노드가 있는지 확인 자식 있으면 span 생성 안함
+								var node=stageArray[a].div.firstChild;								
+								if(node.id=="BLACK"){
+									i=9;
+								}
+							}else{
+								stageArray[a].div.appendChild(this.span); //div에 span 추가							
+								this.move.push(stageArray[a]);
+								spanArray.push(stageArray[a]);
+							}
+						}
+					}				
+				}
+				for(var i=this.x-1;i>0;i--){
+					this.makeSpan();					
+					for(var a=0;a<stageArray.length;a++){		
+						if(stageArray[a].div.id==this.y+""+i){
+							if(stageArray[a].div.hasChildNodes()){	
+								var node=stageArray[a].div.firstChild;								
+								if(node.id=="BLACK"){
+									i=0;								
+								}															
+							}else{
+								stageArray[a].div.appendChild(this.span); //div에 span 추가		
+								this.move.push(stageArray[a]);
+								spanArray.push(stageArray[a]);
+							}
+						}
+					}
+				}
+				for(var i=this.y+1;i<9;i++){
+					this.makeSpan();					
+					for(var a=0;a<stageArray.length;a++){
+						if(stageArray[a].div.id==i+""+this.x){
+							if(stageArray[a].div.hasChildNodes()){ // div 자식이 어떤 노드가 있는지 확인 자식 있으면 span 생성 안함		
+								var node=stageArray[a].div.firstChild;								
+								if(node.id=="BLACK"){
+									i=9;								
+								}								
+								
+							}else{
+								stageArray[a].div.appendChild(this.span); //div에 span 추가				
+								this.move.push(stageArray[a]);
+								spanArray.push(stageArray[a]);
+							}
+						}
+					}				
+				}
+				for(var i=this.y-1;i>0;i--){
+					this.makeSpan();				
+					for(var a=0;a<stageArray.length;a++){		
+						if(stageArray[a].div.id==i+""+this.x){
+							if(stageArray[a].div.hasChildNodes()){	
+								var node=stageArray[a].div.firstChild;								
+								if(node.id=="BLACK"){
+									i=0;								
+								}									
+								
+							}else{
+								stageArray[a].div.appendChild(this.span); //div에 span 추가				
+								this.move.push(stageArray[a]);
+								spanArray.push(stageArray[a]);
+							}
+						}
+					}
+				}			
+		}
+
+
+
+		if(name=="PAWN"){
+			this.span=document.createElement("span");
+			this.span.style.width=50+"px";
+			this.span.style.height=50+"px";
+			this.span.style.background="blue";
+			this.span.style.zIndex="3";
+			this.span.style.position="absolute";
+			this.span.style.float="left";
+			this.span.style.opacity=0.2;
+			this.span.style.borderRadius=25+"px";
+			this.span.style.left=parseInt(this.img.style.left)+25+"px";
+			this.span.style.top=parseInt(this.img.style.top)+125+"px";
+			//alert(this.img.style.left);
+			this.span.addEventListener("click",()=>{
+				this.img.style.left=parseInt(this.span.style.left)-25+"px";
+				this.img.style.top=parseInt(this.span.style.top)-25+"px";
+
+				for(var i=0;i<spanArray.length;i++){ //말을 이동시 모든 span사라지게
+						this.container.removeChild(spanArray[i]);
+				}
+				spanArray=[];
+			});
+			spanArray.push(this.span);
+			this.container.appendChild(this.span);
+		}
+	}
+	makeSpan(){
+		this.span=document.createElement("span");
+		this.span.style.width=50+"px";
+		this.span.style.height=50+"px";
+		this.span.style.background="blue";
+		this.span.style.zIndex="3";
+		this.span.style.position="absolute";
+		this.span.style.float="left";
+		this.span.style.opacity=0.2;
+		this.span.style.borderRadius=25+"px";
+		
+		this.span.addEventListener("click", ()=>{
+			var a=this.span.parentNode;
+			alert(a);
+			//this.img.style.left;
+			//this.img.style.top;
+
+		});
+		
+	}
+}
+
+//div.childNodes.length
