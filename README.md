@@ -8,4 +8,5 @@ final
 체스 각종 옵션 바꿀수있는 기능
 
 <img src="https://postfiles.pstatic.net/MjAxOTA1MDVfMjA4/MDAxNTU3MDI5ODQ4NDg3.BbK3Wy4rA4QYh8gMtYbClJOLjmpZCCGZLb21bLbyvyIg.1yLHLkObcjAGyrVtiWwAnM4gUiIC6ACr2xv13f1I_Csg.PNG.coolwindkmh/image.png?type=w580">
+<img src="https://postfiles.pstatic.net/MjAxOTA1MDVfMjcg/MDAxNTU3MDI5ODgxMzMx.eNOlZMNmIyGdLQ465NSmAJTrorr-IzyQ41ik4gZc12Qg.makzG9vlK8gM1RUN36Ric4js31INfNUp9DmqZrrH8NMg.PNG.coolwindkmh/image.png?type=w580">
 updo기능, 타이머기능, 순서기능등.
