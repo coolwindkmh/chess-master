@@ -1,8 +1,8 @@
 # chess-master
-final
+[Javascript] 체스 게임 개인 프로젝트
 
-<img src="https://postfiles.pstatic.net/MjAxOTA1MDVfNjAg/MDAxNTU3MDI5ODM2Mjg3.awf57gONJ-aq8rdo0LRh4tUJ5nP-97-d0dIo0uso_xsg.i__PK1-Nw6JXyJEpSXBTF6h_43L6xQvs5d1_UwIH0skg.PNG.coolwindkmh/image.png?type=w580">
-체스 메인화면
+<img src="https://blogfiles.pstatic.net/MjAxOTA1MDhfMjk2/MDAxNTU3MzAyMTg5ODE4.at-JlUypLz5ZRrTZWzPeVOOx9zK3SlauZ5F5cm-f0s0g.Wgn2S8FcOUltA4FfYt_2EWXzYD9O8x8FQyATDYAvWxsg.PNG.coolwindkmh/image.png">
+
 <br/>
 <br/>
 <img src="https://postfiles.pstatic.net/MjAxOTA1MDVfOTkg/MDAxNTU3MDI5ODQ0NjY5.dN61K_y9Os4Me0H54EvnC5JHY6czon4_y7d5MhdGD9Eg.ZLaWnKSNlghxsPUhzIPigtwWnmwW3llGOC4fTWse0L0g.PNG.coolwindkmh/image.png?type=w580">
