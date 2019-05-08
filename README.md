@@ -3,12 +3,12 @@
 
 <img src="https://blogfiles.pstatic.net/MjAxOTA1MDhfMjk2/MDAxNTU3MzAyMTg5ODE4.at-JlUypLz5ZRrTZWzPeVOOx9zK3SlauZ5F5cm-f0s0g.Wgn2S8FcOUltA4FfYt_2EWXzYD9O8x8FQyATDYAvWxsg.PNG.coolwindkmh/image.png">
 
+
 <br/>
+<img src="https://blogfiles.pstatic.net/MjAxOTA1MDhfMTIy/MDAxNTU3MzAyNDcxMDEy.9dPnjy6UNUEo21BAXrADGh31Kq-5Nz1Kk6zMyrUsd98g.gzQXzOxm0XyoczSoD1hrtbawD-99pqcQyNbsydaeen8g.PNG.coolwindkmh/image.png">
+
+
 <br/>
-<img src="https://postfiles.pstatic.net/MjAxOTA1MDVfOTkg/MDAxNTU3MDI5ODQ0NjY5.dN61K_y9Os4Me0H54EvnC5JHY6czon4_y7d5MhdGD9Eg.ZLaWnKSNlghxsPUhzIPigtwWnmwW3llGOC4fTWse0L0g.PNG.coolwindkmh/image.png?type=w580">
-체스 각종 옵션 바꿀수있는 기능
-<br/>
-<br/>
-<img src="https://postfiles.pstatic.net/MjAxOTA1MDVfMjA4/MDAxNTU3MDI5ODQ4NDg3.BbK3Wy4rA4QYh8gMtYbClJOLjmpZCCGZLb21bLbyvyIg.1yLHLkObcjAGyrVtiWwAnM4gUiIC6ACr2xv13f1I_Csg.PNG.coolwindkmh/image.png?type=w580">
-<img src="https://postfiles.pstatic.net/MjAxOTA1MDVfMjcg/MDAxNTU3MDI5ODgxMzMx.eNOlZMNmIyGdLQ465NSmAJTrorr-IzyQ41ik4gZc12Qg.makzG9vlK8gM1RUN36Ric4js31INfNUp9DmqZrrH8NMg.PNG.coolwindkmh/image.png?type=w580">
-updo기능, 타이머기능, 순서기능등.
+<img src="https://blogfiles.pstatic.net/MjAxOTA1MDhfMjg1/MDAxNTU3MzAyNTQ1Njcy.c_OpyIDj0-wUimE-PU8YyPtJ948q8glJB5AHMF97gIcg.CpguHHGXbr8iJb1kDK3df7mBa1YhlM3K7XaO38FD7ogg.PNG.coolwindkmh/image.png">
+
+
