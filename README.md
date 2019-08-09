@@ -1,10 +1,8 @@
 # chess-master
 [Javascript] 체스 게임 개인 프로젝트
-<a href   =   "https://coolwindkmh.github.io/chess-master/">   체스하기   </a>
+<a href   =   "https://coolwindkmh.github.io/chess-master/chessMain.html">   체스하기   </a>
 
-출처: https://meaningone.tistory.com/75 [의미 하나]
 
-출처: https://meaningone.tistory.com/75 [의미 하나]
 <img src="https://blogfiles.pstatic.net/MjAxOTA1MTNfMjU3/MDAxNTU3NzA3NDIzMTAx.3rDHcEDueDaUnQsriqrAtOw5macanLp3GWsXa5pO_t4g.Ik25zKj3dRTNKUZvRusw2B6xmMmvrlDLFSjeTH5iaxsg.PNG.coolwindkmh/image.png">
 
 
